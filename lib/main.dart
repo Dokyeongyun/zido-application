@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 import 'package:provider/provider.dart';
 import 'package:zido/main_menu.dart';
 
 void main() async {
+  await dotenv.load();
+
+  String kakaoMapKey = dotenv.get("KAKAO_MAP_KEY");
+  AuthRepository.initialize(
+    appKey: kakaoMapKey,
+  );
+
   runApp(const MyApp());
 }
 

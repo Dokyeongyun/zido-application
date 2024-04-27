@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:zido/kakao_map_container.dart';
 
 class MainMenu extends StatefulWidget {
   const MainMenu({
@@ -12,11 +13,6 @@ class MainMenu extends StatefulWidget {
 class _MainMenuState extends State<MainMenu> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.all(10),
-      child: const Column(
-        children: [],
-      ),
-    );
+    return const KakaoMapContainer();
   }
 }
