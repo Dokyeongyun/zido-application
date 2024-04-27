@@ -17,11 +17,20 @@ class _MainMenuState extends State<MainMenu> {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(10),
-      child: const Column(
+      child: Column(
         children: [
-          KakaoMapContainer(),
-          SizedBox(height: 15),
-          MenuBoardContainer(),
+          const KakaoMapContainer(),
+          const SizedBox(height: 15),
+          MenuBoardContainer(
+            title: "Draw your Zido",
+            iconImages: <Image>[
+              Image.asset('assets/images/rice.png'),
+              Image.asset('assets/images/frying-pan.png'),
+              Image.asset('assets/images/movie.png'),
+              Image.asset('assets/images/earth.png'),
+              Image.asset('assets/images/calendar2.png'),
+            ],
+          ),
         ],
       ),
     );

@@ -4,7 +4,12 @@ import 'package:zido/menu_icon_button.dart';
 class MenuBoardContainer extends StatelessWidget {
   const MenuBoardContainer({
     super.key,
+    required this.title,
+    required this.iconImages,
   });
+
+  final String title;
+  final List<Image> iconImages;
 
   @override
   Widget build(BuildContext context) {
@@ -22,10 +27,14 @@ class MenuBoardContainer extends StatelessWidget {
           )
         ],
       ),
-      child: const Column(
+      child: Column(
         children: [
-          MenuBoardTitleContainer(),
-          MenuBoardMenuListRow(),
+          MenuBoardTitleContainer(
+            title: title,
+          ),
+          MenuBoardMenuListRow(
+            iconImages: iconImages,
+          ),
         ],
       ),
     );
@@ -35,16 +44,19 @@ class MenuBoardContainer extends StatelessWidget {
 class MenuBoardTitleContainer extends StatelessWidget {
   const MenuBoardTitleContainer({
     super.key,
+    required this.title,
   });
+
+  final String title;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.fromLTRB(0, 0, 0, 14),
-      child: const Row(children: [
+      child: Row(children: [
         Text(
-          'Draw your Zido',
-          style: TextStyle(
+          title,
+          style: const TextStyle(
             fontSize: 15.0,
           ),
         )
@@ -56,28 +68,18 @@ class MenuBoardTitleContainer extends StatelessWidget {
 class MenuBoardMenuListRow extends StatelessWidget {
   const MenuBoardMenuListRow({
     super.key,
+    required this.iconImages,
   });
+
+  final List<Image> iconImages;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        MenuIconButton(
-          iconImage: Image.asset('assets/images/rice.png'),
-        ),
-        MenuIconButton(
-          iconImage: Image.asset('assets/images/frying-pan.png'),
-        ),
-        MenuIconButton(
-          iconImage: Image.asset('assets/images/movie.png'),
-        ),
-        MenuIconButton(
-          iconImage: Image.asset('assets/images/earth.png'),
-        ),
-        MenuIconButton(
-          iconImage: Image.asset('assets/images/calendar2.png'),
-        ),
+      children: <Widget>[
+        for (Image iconImage in iconImages)
+          MenuIconButton(iconImage: iconImage),
       ],
     );
   }
