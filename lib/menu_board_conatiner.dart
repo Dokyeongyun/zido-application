@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:zido/main_menu.dart';
 import 'package:zido/menu_icon_button.dart';
 
 class MenuBoardContainer extends StatelessWidget {
@@ -23,41 +22,63 @@ class MenuBoardContainer extends StatelessWidget {
           )
         ],
       ),
-      child: Column(
+      child: const Column(
         children: [
-          Container(
-            margin: const EdgeInsets.fromLTRB(0, 0, 0, 14),
-            child: const Row(children: [
-              Text(
-                'Draw your Zido',
-                style: TextStyle(
-                  fontSize: 15.0,
-                ),
-              )
-            ]),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              MenuIconButton(
-                iconImage: Image.asset('assets/images/rice.png'),
-              ),
-              MenuIconButton(
-                iconImage: Image.asset('assets/images/frying-pan.png'),
-              ),
-              MenuIconButton(
-                iconImage: Image.asset('assets/images/movie.png'),
-              ),
-              MenuIconButton(
-                iconImage: Image.asset('assets/images/earth.png'),
-              ),
-              MenuIconButton(
-                iconImage: Image.asset('assets/images/calendar2.png'),
-              ),
-            ],
-          ),
+          MenuBoardTitleContainer(),
+          MenuBoardMenuListRow(),
         ],
       ),
+    );
+  }
+}
+
+class MenuBoardTitleContainer extends StatelessWidget {
+  const MenuBoardTitleContainer({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(0, 0, 0, 14),
+      child: const Row(children: [
+        Text(
+          'Draw your Zido',
+          style: TextStyle(
+            fontSize: 15.0,
+          ),
+        )
+      ]),
+    );
+  }
+}
+
+class MenuBoardMenuListRow extends StatelessWidget {
+  const MenuBoardMenuListRow({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        MenuIconButton(
+          iconImage: Image.asset('assets/images/rice.png'),
+        ),
+        MenuIconButton(
+          iconImage: Image.asset('assets/images/frying-pan.png'),
+        ),
+        MenuIconButton(
+          iconImage: Image.asset('assets/images/movie.png'),
+        ),
+        MenuIconButton(
+          iconImage: Image.asset('assets/images/earth.png'),
+        ),
+        MenuIconButton(
+          iconImage: Image.asset('assets/images/calendar2.png'),
+        ),
+      ],
     );
   }
 }
