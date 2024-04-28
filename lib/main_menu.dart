@@ -44,6 +44,26 @@ class _MainMenuState extends State<MainMenu> {
               MenuIconButton(
                 iconImage: Image.asset('assets/images/calendar2.png'),
                 name: '계획할지도',
+              ),
+              MenuIconButton(
+                iconImage: Image.asset('assets/images/shopping-cart.png'),
+                name: '사버릴지도',
+              ),
+              MenuIconButton(
+                iconImage: Image.asset('assets/images/selfie.png'),
+                name: '추억일지도',
+              ),
+              MenuIconButton(
+                iconImage: Image.asset('assets/images/gamepad.png'),
+                name: '게임할지도',
+              ),
+              MenuIconButton(
+                iconImage: Image.asset('assets/images/trophy.png'),
+                name: '도전할지도',
+              ),
+              MenuIconButton(
+                iconImage: Image.asset('assets/images/sticky-note.png'),
+                name: '메모할지도',
               )
             ],
           ),
