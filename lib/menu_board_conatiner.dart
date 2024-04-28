@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:zido/menu_icon_button.dart';
+import 'package:collection/collection.dart';
 
 class MenuBoardContainer extends StatelessWidget {
   const MenuBoardContainer({
@@ -13,6 +14,17 @@ class MenuBoardContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> children = [];
+    children.add(MenuBoardTitleContainer(title: title));
+    children.addAll(
+      menuIconButtons
+          .slices(5)
+          .map((e) => MenuBoardMenuListRow(
+                menuIconButtons: e,
+              ))
+          .toList(),
+    );
+
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
@@ -27,16 +39,7 @@ class MenuBoardContainer extends StatelessWidget {
           )
         ],
       ),
-      child: Column(
-        children: [
-          MenuBoardTitleContainer(
-            title: title,
-          ),
-          MenuBoardMenuListRow(
-            menuIconButtons: menuIconButtons,
-          ),
-        ],
-      ),
+      child: Column(children: children),
     );
   }
 }
@@ -56,9 +59,7 @@ class MenuBoardTitleContainer extends StatelessWidget {
       child: Row(children: [
         Text(
           title,
-          style: const TextStyle(
-            fontSize: 15.0,
-          ),
+          style: const TextStyle(fontSize: 15.0),
         )
       ]),
     );

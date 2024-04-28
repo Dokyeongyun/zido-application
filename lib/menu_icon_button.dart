@@ -14,36 +14,39 @@ class MenuIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        Container(
-          width: boxSize,
-          height: boxSize,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
-            color: const Color.fromARGB(255, 243, 243, 243),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(8),
-            child: SizedBox(
-              child: InkWell(
-                child: iconImage,
-                onTap: () {},
+    return Container(
+      margin: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Container(
+            width: boxSize,
+            height: boxSize,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              color: const Color.fromARGB(255, 243, 243, 243),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: SizedBox(
+                child: InkWell(
+                  child: iconImage,
+                  onTap: () {},
+                ),
               ),
             ),
           ),
-        ),
-        const SizedBox(
-          height: 6,
-        ),
-        Text(
-          name,
-          style: const TextStyle(
-            fontSize: 11,
+          Container(
+            margin: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+            child: Text(
+              name,
+              style: const TextStyle(
+                fontSize: 11,
+              ),
+            ),
           ),
-        )
-      ],
+        ],
+      ),
     );
   }
 }
