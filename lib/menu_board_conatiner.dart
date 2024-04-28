@@ -5,11 +5,11 @@ class MenuBoardContainer extends StatelessWidget {
   const MenuBoardContainer({
     super.key,
     required this.title,
-    required this.iconImages,
+    required this.menuIconButtons,
   });
 
   final String title;
-  final List<Image> iconImages;
+  final List<MenuIconButton> menuIconButtons;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,7 @@ class MenuBoardContainer extends StatelessWidget {
             title: title,
           ),
           MenuBoardMenuListRow(
-            iconImages: iconImages,
+            menuIconButtons: menuIconButtons,
           ),
         ],
       ),
@@ -68,19 +68,16 @@ class MenuBoardTitleContainer extends StatelessWidget {
 class MenuBoardMenuListRow extends StatelessWidget {
   const MenuBoardMenuListRow({
     super.key,
-    required this.iconImages,
+    required this.menuIconButtons,
   });
 
-  final List<Image> iconImages;
+  final List<MenuIconButton> menuIconButtons;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: <Widget>[
-        for (Image iconImage in iconImages)
-          MenuIconButton(iconImage: iconImage),
-      ],
+      children: menuIconButtons,
     );
   }
 }

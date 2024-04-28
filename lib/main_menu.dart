@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:zido/kakao_map_container.dart';
 import 'package:zido/menu_board_conatiner.dart';
+import 'package:zido/menu_icon_button.dart';
 
 class MainMenu extends StatefulWidget {
   const MainMenu({
@@ -23,12 +24,27 @@ class _MainMenuState extends State<MainMenu> {
           const SizedBox(height: 15),
           MenuBoardContainer(
             title: "Draw your Zido",
-            iconImages: <Image>[
-              Image.asset('assets/images/rice.png'),
-              Image.asset('assets/images/frying-pan.png'),
-              Image.asset('assets/images/movie.png'),
-              Image.asset('assets/images/earth.png'),
-              Image.asset('assets/images/calendar2.png'),
+            menuIconButtons: [
+              MenuIconButton(
+                iconImage: Image.asset('assets/images/rice.png'),
+                name: '대동맛지도',
+              ),
+              MenuIconButton(
+                iconImage: Image.asset('assets/images/frying-pan.png'),
+                name: '요리할지도',
+              ),
+              MenuIconButton(
+                iconImage: Image.asset('assets/images/movie.png'),
+                name: '재밌을지도',
+              ),
+              MenuIconButton(
+                iconImage: Image.asset('assets/images/earth.png'),
+                name: '여행갈지도',
+              ),
+              MenuIconButton(
+                iconImage: Image.asset('assets/images/calendar2.png'),
+                name: '계획할지도',
+              )
             ],
           ),
         ],
