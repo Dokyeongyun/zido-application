@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:zido/food_map.dart';
 import 'package:zido/kakao_map_container.dart';
 import 'package:zido/menu_board_conatiner.dart';
 import 'package:zido/menu_icon_button.dart';
@@ -28,6 +29,7 @@ class _MainMenuState extends State<MainMenu> {
               MenuIconButton(
                 iconImage: Image.asset('assets/images/rice.png'),
                 name: '대동맛지도',
+                menuHomeScreen: const FoodMap(title: '대동맛지도'),
               ),
               MenuIconButton(
                 iconImage: Image.asset('assets/images/frying-pan.png'),

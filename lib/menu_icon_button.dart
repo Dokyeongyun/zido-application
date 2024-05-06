@@ -5,12 +5,14 @@ class MenuIconButton extends StatelessWidget {
     super.key,
     required this.iconImage,
     required this.name,
+    this.menuHomeScreen,
     this.boxSize = 50,
   });
 
   final Image iconImage;
   final String name;
   final double boxSize;
+  final Widget? menuHomeScreen;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +33,16 @@ class MenuIconButton extends StatelessWidget {
               child: SizedBox(
                 child: InkWell(
                   child: iconImage,
-                  onTap: () {},
+                  onTap: () {
+                    if (menuHomeScreen != null) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => menuHomeScreen!,
+                        ),
+                      );
+                    }
+                  },
                 ),
               ),
             ),
@@ -40,9 +51,7 @@ class MenuIconButton extends StatelessWidget {
             margin: const EdgeInsets.fromLTRB(0, 5, 0, 5),
             child: Text(
               name,
-              style: const TextStyle(
-                fontSize: 11,
-              ),
+              style: const TextStyle(fontSize: 11),
             ),
           ),
         ],
