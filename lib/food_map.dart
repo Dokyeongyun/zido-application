@@ -17,8 +17,69 @@ class FoodMap extends StatelessWidget {
       children: [
         KakaoMapContainer(height: double.infinity),
         TopButtonBar(),
+        FoodMapDraggableScrollableSheet(),
       ],
     ));
+  }
+}
+
+class FoodMapDraggableScrollableSheet extends StatelessWidget {
+  const FoodMapDraggableScrollableSheet({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return DraggableScrollableSheet(
+      initialChildSize: 0.35,
+      minChildSize: 0.1,
+      maxChildSize: 0.895,
+      builder: (BuildContext context, ScrollController scrollController) {
+        return SingleChildScrollView(
+          controller: scrollController,
+          child: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
+            height: 1000,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(16),
+                topRight: Radius.circular(16),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.35),
+                  blurRadius: 8.0,
+                  spreadRadius: 2.0,
+                  offset: const Offset(0, -2),
+                )
+              ],
+            ),
+            child: CustomScrollView(
+              controller: scrollController,
+              slivers: [
+                SliverToBoxAdapter(
+                  child: Center(
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        color: Color.fromARGB(255, 198, 198, 198),
+                        borderRadius: BorderRadius.all(Radius.circular(12)),
+                      ),
+                      height: 4,
+                      width: 32,
+                      margin: const EdgeInsets.symmetric(vertical: 10),
+                    ),
+                  ),
+                ),
+                SliverList.list(
+                  children: const [],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 }
 
