@@ -4,12 +4,15 @@ import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 class KakaoMapContainer extends StatelessWidget {
   const KakaoMapContainer({
     super.key,
+    this.height = 280,
   });
+
+  final double height;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 280,
+      height: height,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         color: Colors.white,
