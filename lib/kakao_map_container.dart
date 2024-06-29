@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 
 class KakaoMapContainer extends StatelessWidget {
@@ -11,6 +14,65 @@ class KakaoMapContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    late KakaoMapController mapController;
+
+    Future<Coord2Address> coord2Address(LatLng latLng) async {
+      Coord2AddressRequest request = Coord2AddressRequest(
+        x: latLng.latitude,
+        y: latLng.longitude,
+      );
+
+      return mapController
+          .coord2Address(request)
+          .then((value) => value.list.first)
+          .timeout(const Duration(seconds: 1));
+    }
+
+    Future<KeywordSearchResponse> keywordSearch(
+      String keyword,
+      LatLng latLng,
+      int radius,
+    ) async {
+      KeywordSearchRequest request = KeywordSearchRequest(
+        keyword: keyword,
+        x: latLng.longitude,
+        y: latLng.latitude,
+        radius: radius,
+        page: 1,
+        size: 5,
+        sort: SortBy.distance,
+      );
+      return mapController.keywordSearch(request);
+    }
+
+    void showSearchFailedToast() {
+      Fluttertoast.showToast(msg: "주소 검색에 실패했습니다. 잠시 후 다시 시도해주세요.");
+    }
+
+    Future<void> searchLocation(LatLng latLng) async {
+      try {
+        Coord2Address searchedAddress = await coord2Address(latLng);
+        RoadAddress? roadAddress = searchedAddress.roadAddress;
+        Address? address = searchedAddress.address;
+
+        String? keywordSearchAddress =
+            roadAddress?.addressName ?? address?.addressName;
+        if (keywordSearchAddress != null) {
+          KeywordSearchResponse response = await keywordSearch(
+            keywordSearchAddress,
+            latLng,
+            10,
+          );
+
+          response.list.forEach((element) => print(element));
+        } else {
+          showSearchFailedToast();
+        }
+      } catch (error) {
+        showSearchFailedToast();
+      }
+    }
+
     return Container(
       height: height,
       decoration: BoxDecoration(
@@ -30,7 +92,12 @@ class KakaoMapContainer extends StatelessWidget {
           Radius.circular(10),
         ),
         child: KakaoMap(
-          onMapCreated: ((controller) async {}),
+          onMapCreated: ((controller) async {
+            mapController = controller;
+          }),
+          onMapTap: ((latLng) async {
+            await searchLocation(latLng);
+          }),
           center: LatLng(37.3608681, 126.9306506),
         ),
       ),

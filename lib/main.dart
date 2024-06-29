@@ -10,6 +10,7 @@ void main() async {
   String kakaoMapKey = dotenv.get("KAKAO_MAP_KEY");
   AuthRepository.initialize(
     appKey: kakaoMapKey,
+    baseUrl: 'http://localhost:8080',
   );
 
   runApp(const MyApp());
