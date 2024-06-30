@@ -1,4 +1,6 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:zido/kakao_map_container.dart';
 import 'package:zido/square_icon_button.dart';
 
@@ -71,14 +73,188 @@ class FoodMapDraggableScrollableSheet extends StatelessWidget {
                     ),
                   ),
                 ),
-                SliverList.list(
-                  children: const [],
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (BuildContext context, int index) {
+                      return Container(
+                        margin: const EdgeInsets.symmetric(
+                          vertical: 6.0,
+                          horizontal: 12.0,
+                        ),
+                        child: const Column(
+                          children: [
+                            PlaceListItem(
+                              category: '음식점',
+                              name: '서리풀돈까스',
+                              phone: '010-0000-0000',
+                              address: '서울 서초구 논현로31길 52',
+                              url: 'https://place.map.kakao.com/17285608',
+                            ),
+                            SizedBox(height: 10.0),
+                            Divider(
+                              height: 0.0,
+                              thickness: 0.5,
+                            )
+                          ],
+                        ),
+                      );
+                    },
+                    childCount: 10,
+                  ),
                 ),
               ],
             ),
           ),
         );
       },
+    );
+  }
+}
+
+class PlaceListItem extends StatelessWidget {
+  const PlaceListItem({
+    super.key,
+    required this.category,
+    required this.name,
+    required this.phone,
+    required this.address,
+    required this.url,
+  });
+
+  final String category;
+  final String name;
+  final String phone;
+  final String address;
+  final String url;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Row(
+          children: [
+            Text(
+              name,
+              style: const TextStyle(
+                fontSize: 14.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(width: 4),
+            Text(
+              category,
+              style: const TextStyle(
+                color: Color.fromARGB(255, 109, 109, 109),
+                fontSize: 12.0,
+                fontWeight: FontWeight.normal,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 6),
+        IconText(
+          iconData: Icons.phone,
+          text: phone,
+        ),
+        const SizedBox(height: 6),
+        IconText(
+          iconData: Icons.location_on_outlined,
+          text: address,
+        ),
+        const SizedBox(height: 6),
+        IconHiperText(
+          iconData: Icons.link,
+          text: url,
+          url: url,
+        ),
+      ],
+    );
+  }
+}
+
+class IconText extends StatelessWidget {
+  const IconText({
+    super.key,
+    required this.iconData,
+    required this.text,
+  });
+
+  final IconData iconData;
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return IconItem(
+      iconData: iconData,
+      item: Text(
+        text,
+        style: const TextStyle(
+          color: Color.fromARGB(255, 63, 63, 63),
+          fontSize: 12.0,
+        ),
+      ),
+    );
+  }
+}
+
+class IconHiperText extends StatelessWidget {
+  const IconHiperText({
+    super.key,
+    required this.iconData,
+    required this.text,
+    required this.url,
+  });
+
+  final IconData iconData;
+  final String text;
+  final String url;
+
+  @override
+  Widget build(BuildContext context) {
+    return IconItem(
+      iconData: iconData,
+      item: RichText(
+        textAlign: TextAlign.start,
+        text: TextSpan(
+          text: url,
+          style: const TextStyle(
+            color: Colors.blueAccent,
+            fontSize: 12,
+          ),
+          recognizer: TapGestureRecognizer()
+            ..onTap = () {
+              launchUrl(Uri.parse(url));
+            },
+        ),
+      ),
+    );
+  }
+}
+
+class IconItem extends StatelessWidget {
+  const IconItem({
+    super.key,
+    required this.iconData,
+    required this.item,
+  });
+
+  final IconData iconData;
+  final Widget item;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Icon(
+          iconData,
+          color: const Color(0xffA1CE5D),
+          size: 16.0,
+        ),
+        const SizedBox(width: 4),
+        item
+      ],
     );
   }
 }
