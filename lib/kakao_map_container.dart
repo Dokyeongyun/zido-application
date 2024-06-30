@@ -14,6 +14,7 @@ class KakaoMapContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    late Marker tappedLocationMarker;
     late KakaoMapController mapController;
 
     Future<Coord2Address> coord2Address(LatLng latLng) async {
@@ -64,7 +65,26 @@ class KakaoMapContainer extends StatelessWidget {
             10,
           );
 
-          response.list.forEach((element) => print(element));
+          for (KeywordAddress keywordAddress in response.list) {
+            double latitude = keywordAddress.y != null
+                ? double.parse(keywordAddress.y!)
+                : 0.0;
+
+            double longitude = keywordAddress.x != null
+                ? double.parse(keywordAddress.x!)
+                : 0.0;
+
+            if (latitude != 0.0 && longitude != 0.0) {
+              tappedLocationMarker = Marker(
+                markerId: 'tappedLocationMarker',
+                latLng: LatLng(latitude, longitude),
+                width: 10,
+                height: 10,
+              );
+
+              mapController.addMarker(markers: [tappedLocationMarker]);
+            }
+          }
         } else {
           showSearchFailedToast();
         }
