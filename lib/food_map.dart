@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:zido/kakao_map_container.dart';
 import 'package:zido/square_icon_button.dart';
@@ -25,86 +26,108 @@ class FoodMap extends StatelessWidget {
   }
 }
 
-class FoodMapDraggableScrollableSheet extends StatelessWidget {
+class FoodMapDraggableScrollableSheet extends StatefulWidget {
   const FoodMapDraggableScrollableSheet({
     super.key,
   });
 
   @override
+  State<FoodMapDraggableScrollableSheet> createState() =>
+      _FoodMapDraggableScrollableSheetState();
+}
+
+class _FoodMapDraggableScrollableSheetState
+    extends State<FoodMapDraggableScrollableSheet> {
+  double initialChildSize = 0.35;
+
+  @override
   Widget build(BuildContext context) {
-    return DraggableScrollableSheet(
-      initialChildSize: 0.35,
-      minChildSize: 0.1,
-      maxChildSize: 0.895,
-      builder: (BuildContext context, ScrollController scrollController) {
-        return SingleChildScrollView(
-          controller: scrollController,
-          child: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
-            height: 1000,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(16),
-                topRight: Radius.circular(16),
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.35),
-                  blurRadius: 8.0,
-                  spreadRadius: 2.0,
-                  offset: const Offset(0, -2),
-                )
-              ],
-            ),
-            child: CustomScrollView(
+    return Consumer<PlaceProvider>(
+      builder: (context, placeProvider, child) {
+        if (placeProvider.places.isNotEmpty) {
+          initialChildSize = 0.18;
+        }
+
+        return DraggableScrollableSheet(
+          initialChildSize: initialChildSize,
+          minChildSize: 0.1,
+          maxChildSize: 0.895,
+          builder: (BuildContext context, ScrollController scrollController) {
+            return SingleChildScrollView(
               controller: scrollController,
-              slivers: [
-                SliverToBoxAdapter(
-                  child: Center(
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        color: Color.fromARGB(255, 198, 198, 198),
-                        borderRadius: BorderRadius.all(Radius.circular(12)),
+              child: Container(
+                margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
+                height: 1000,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(16),
+                    topRight: Radius.circular(16),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.35),
+                      blurRadius: 8.0,
+                      spreadRadius: 2.0,
+                      offset: const Offset(0, -2),
+                    )
+                  ],
+                ),
+                child: CustomScrollView(
+                  controller: scrollController,
+                  slivers: [
+                    SliverToBoxAdapter(
+                      child: Center(
+                        child: Container(
+                          decoration: const BoxDecoration(
+                            color: Color.fromARGB(255, 198, 198, 198),
+                            borderRadius: BorderRadius.all(Radius.circular(12)),
+                          ),
+                          height: 4,
+                          width: 32,
+                          margin: const EdgeInsets.symmetric(vertical: 10),
+                        ),
                       ),
-                      height: 4,
-                      width: 32,
-                      margin: const EdgeInsets.symmetric(vertical: 10),
                     ),
-                  ),
-                ),
-                SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (BuildContext context, int index) {
-                      return Container(
-                        margin: const EdgeInsets.symmetric(
-                          vertical: 6.0,
-                          horizontal: 12.0,
-                        ),
-                        child: const Column(
-                          children: [
-                            PlaceListItem(
-                              category: '음식점',
-                              name: '서리풀돈까스',
-                              phone: '010-0000-0000',
-                              address: '서울 서초구 논현로31길 52',
-                              url: 'https://place.map.kakao.com/17285608',
+                    SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (BuildContext context, int index) {
+                          if (placeProvider.places.isEmpty) {
+                            return const Text('empty.');
+                          }
+
+                          final place = placeProvider.places[index];
+                          return Container(
+                            margin: const EdgeInsets.symmetric(
+                              vertical: 6.0,
+                              horizontal: 12.0,
                             ),
-                            SizedBox(height: 10.0),
-                            Divider(
-                              height: 0.0,
-                              thickness: 0.5,
-                            )
-                          ],
-                        ),
-                      );
-                    },
-                    childCount: 10,
-                  ),
+                            child: Column(
+                              children: [
+                                PlaceListItem(
+                                  category: place.category,
+                                  name: place.name,
+                                  phone: place.phone,
+                                  address: place.address,
+                                  url: place.url,
+                                ),
+                                const SizedBox(height: 10.0),
+                                const Divider(
+                                  height: 0.0,
+                                  thickness: 0.5,
+                                )
+                              ],
+                            ),
+                          );
+                        },
+                        childCount: placeProvider.places.length,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
+              ),
+            );
+          },
         );
       },
     );

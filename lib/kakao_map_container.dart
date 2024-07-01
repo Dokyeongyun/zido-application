@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
+import 'package:provider/provider.dart';
+import 'package:zido/place.dart';
 
 class KakaoMapContainer extends StatelessWidget {
   const KakaoMapContainer({
@@ -14,7 +16,7 @@ class KakaoMapContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    late Marker tappedLocationMarker;
+    late Marker? tappedLocationMarker;
     late KakaoMapController mapController;
 
     Future<Coord2Address> coord2Address(LatLng latLng) async {
@@ -65,7 +67,33 @@ class KakaoMapContainer extends StatelessWidget {
             10,
           );
 
-          for (KeywordAddress keywordAddress in response.list) {
+          List<KeywordAddress> keywordAddresses = response.list;
+          List<Place> places = keywordAddresses.where((element) {
+            String? categoryGroupName = element.categoryGroupName;
+            if (categoryGroupName != null &&
+                categoryGroupName.contains('음식점')) {
+              return true;
+            } else {
+              return false;
+            }
+          }).map(
+            (e) {
+              return Place(
+                  category: e.categoryGroupName ?? '',
+                  name: e.placeName ?? '',
+                  phone: e.phone ?? '',
+                  address: e.roadAddressName ?? e.addressName ?? '',
+                  url: e.placeUrl ?? '');
+            },
+          ).toList();
+
+          Provider.of<PlaceProvider>(
+            context,
+            listen: false,
+          ).setPlaces(places);
+
+          if (places.isNotEmpty) {
+            KeywordAddress keywordAddress = keywordAddresses.first;
             double latitude = keywordAddress.y != null
                 ? double.parse(keywordAddress.y!)
                 : 0.0;
@@ -81,8 +109,6 @@ class KakaoMapContainer extends StatelessWidget {
                 width: 10,
                 height: 10,
               );
-
-              mapController.addMarker(markers: [tappedLocationMarker]);
             }
           }
         } else {
@@ -116,11 +142,27 @@ class KakaoMapContainer extends StatelessWidget {
             mapController = controller;
           }),
           onMapTap: ((latLng) async {
+            tappedLocationMarker = null;
+            mapController.addMarker(markers: []);
             await searchLocation(latLng);
+            if (tappedLocationMarker != null) {
+              mapController.addMarker(markers: [tappedLocationMarker!]);
+            }
           }),
-          center: LatLng(37.3608681, 126.9306506),
+          center: LatLng(37.48256861253413, 127.04079608010362),
         ),
       ),
     );
+  }
+}
+
+class PlaceProvider with ChangeNotifier {
+  List<Place> _places = [];
+
+  List<Place> get places => _places;
+
+  Future<void> setPlaces(List<Place> places) async {
+    _places = places;
+    notifyListeners();
   }
 }
