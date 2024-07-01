@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -158,11 +159,25 @@ class KakaoMapContainer extends StatelessWidget {
 
 class PlaceProvider with ChangeNotifier {
   List<Place> _places = [];
+  bool _isInitialized = false;
 
   List<Place> get places => _places;
 
   Future<void> setPlaces(List<Place> places) async {
     _places = places;
+    _isInitialized = true;
     notifyListeners();
+  }
+
+  bool isInitialized() {
+    return _isInitialized;
+  }
+
+  bool isPlaceEmpty() {
+    return _isInitialized && _places.isEmpty;
+  }
+
+  bool isPlaceNotEmpty() {
+    return _isInitialized && _places.isNotEmpty;
   }
 }

@@ -39,13 +39,14 @@ class FoodMapDraggableScrollableSheet extends StatefulWidget {
 
 class _FoodMapDraggableScrollableSheetState
     extends State<FoodMapDraggableScrollableSheet> {
-  double initialChildSize = 0.35;
+  // double initialChildSize = 0.35;
+  double initialChildSize = 0.18;
 
   @override
   Widget build(BuildContext context) {
     return Consumer<PlaceProvider>(
       builder: (context, placeProvider, child) {
-        if (placeProvider.places.isNotEmpty) {
+        if (placeProvider.isPlaceNotEmpty()) {
           initialChildSize = 0.18;
         }
 
@@ -90,34 +91,73 @@ class _FoodMapDraggableScrollableSheetState
                         ),
                       ),
                     ),
-                    SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        (BuildContext context, int index) {
-                          if (placeProvider.places.isEmpty) {
-                            return const Text('empty.');
-                          }
-
-                          final place = placeProvider.places[index];
-                          return Container(
-                            margin: const EdgeInsets.symmetric(
-                              vertical: 6.0,
-                              horizontal: 12.0,
-                            ),
-                            child: Column(
-                              children: [
-                                PlaceListItem(place: place),
-                                const SizedBox(height: 10.0),
-                                const Divider(
-                                  height: 0.0,
-                                  thickness: 0.5,
-                                )
-                              ],
-                            ),
-                          );
-                        },
-                        childCount: placeProvider.places.length,
+                    if (!placeProvider.isInitialized())
+                      SliverToBoxAdapter(
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(
+                            vertical: 8,
+                            horizontal: 16,
+                          ),
+                          child: const Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.location_on_outlined,
+                                size: 30,
+                              ),
+                              Text('지도에서 장소를 선택하시면'),
+                              Text('주변의 음식점을 검색할 수 있어요.'),
+                            ],
+                          ),
+                        ),
+                      )
+                    else if (placeProvider.isPlaceEmpty())
+                      SliverToBoxAdapter(
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(
+                            vertical: 8,
+                            horizontal: 16,
+                          ),
+                          child: const Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.not_listed_location_outlined,
+                                size: 30,
+                              ),
+                              Text('주변에 음식점이 없습니다.'),
+                              Text('다른 장소를 선택해주세요.'),
+                            ],
+                          ),
+                        ),
+                      )
+                    else
+                      SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (BuildContext context, int index) {
+                            final place = placeProvider.places[index];
+                            return Container(
+                              margin: const EdgeInsets.symmetric(
+                                vertical: 6.0,
+                                horizontal: 12.0,
+                              ),
+                              child: Column(
+                                children: [
+                                  PlaceListItem(place: place),
+                                  const SizedBox(height: 10.0),
+                                  const Divider(
+                                    height: 0.0,
+                                    thickness: 0.5,
+                                  )
+                                ],
+                              ),
+                            );
+                          },
+                          childCount: placeProvider.places.length,
+                        ),
                       ),
-                    ),
                   ],
                 ),
               ),
