@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 import 'package:provider/provider.dart';
+import 'package:zido/kakao_map_container.dart';
 import 'package:zido/main_menu.dart';
 
 void main() async {
@@ -10,9 +11,17 @@ void main() async {
   String kakaoMapKey = dotenv.get("KAKAO_MAP_KEY");
   AuthRepository.initialize(
     appKey: kakaoMapKey,
+    baseUrl: 'http://localhost:8080',
   );
 
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => PlaceProvider()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
