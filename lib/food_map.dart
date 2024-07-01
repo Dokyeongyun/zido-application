@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:zido/kakao_map_container.dart';
+import 'package:zido/place.dart';
 import 'package:zido/square_icon_button.dart';
 
 class FoodMap extends StatelessWidget {
@@ -104,13 +105,7 @@ class _FoodMapDraggableScrollableSheetState
                             ),
                             child: Column(
                               children: [
-                                PlaceListItem(
-                                  category: place.category,
-                                  name: place.name,
-                                  phone: place.phone,
-                                  address: place.address,
-                                  url: place.url,
-                                ),
+                                PlaceListItem(place: place),
                                 const SizedBox(height: 10.0),
                                 const Divider(
                                   height: 0.0,
@@ -137,18 +132,10 @@ class _FoodMapDraggableScrollableSheetState
 class PlaceListItem extends StatelessWidget {
   const PlaceListItem({
     super.key,
-    required this.category,
-    required this.name,
-    required this.phone,
-    required this.address,
-    required this.url,
+    required this.place,
   });
 
-  final String category;
-  final String name;
-  final String phone;
-  final String address;
-  final String url;
+  final Place place;
 
   @override
   Widget build(BuildContext context) {
@@ -159,7 +146,7 @@ class PlaceListItem extends StatelessWidget {
         Row(
           children: [
             Text(
-              name,
+              place.name,
               style: const TextStyle(
                 fontSize: 14.0,
                 fontWeight: FontWeight.bold,
@@ -167,7 +154,7 @@ class PlaceListItem extends StatelessWidget {
             ),
             const SizedBox(width: 4),
             Text(
-              category,
+              place.category,
               style: const TextStyle(
                 color: Color.fromARGB(255, 109, 109, 109),
                 fontSize: 12.0,
@@ -179,18 +166,18 @@ class PlaceListItem extends StatelessWidget {
         const SizedBox(height: 6),
         IconText(
           iconData: Icons.phone,
-          text: phone,
+          text: place.phone,
         ),
         const SizedBox(height: 6),
         IconText(
           iconData: Icons.location_on_outlined,
-          text: address,
+          text: place.address,
         ),
         const SizedBox(height: 6),
         IconHiperText(
           iconData: Icons.link,
-          text: url,
-          url: url,
+          text: place.url,
+          url: place.url,
         ),
       ],
     );
