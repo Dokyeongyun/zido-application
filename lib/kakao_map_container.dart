@@ -20,6 +20,7 @@ class KakaoMapContainer extends StatefulWidget {
 }
 
 class _KakaoMapContainerState extends State<KakaoMapContainer> {
+  LocationPermission? geoPermission;
   Marker? tappedLocationMarker;
   LatLng? currentLatLng;
   late KakaoMapController mapController;
@@ -28,15 +29,24 @@ class _KakaoMapContainerState extends State<KakaoMapContainer> {
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return Future.error('permissions are denied');
-      }
+      setState(() {
+        geoPermission = permission;
+      });
 
-      await setCurrentLatLng();
+      if (geoPermission != LocationPermission.denied) {
+        await setCurrentLatLng();
+      }
+    } else {
+      setState(() {
+        geoPermission = permission;
+      });
     }
   }
 
   setCurrentLatLng() async {
+    if (geoPermission == null) {
+      requestGeoPermission();
+    }
     Position position = await Geolocator.getCurrentPosition();
     setState(() {
       currentLatLng = LatLng(position.latitude, position.longitude);
@@ -51,9 +61,31 @@ class _KakaoMapContainerState extends State<KakaoMapContainer> {
 
   @override
   Widget build(BuildContext context) {
+    if (geoPermission == null ||
+        geoPermission == LocationPermission.denied ||
+        geoPermission == LocationPermission.deniedForever) {
+      return Wrapper(
+        widget: widget,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            OutlinedButton(
+              onPressed: () {
+                requestGeoPermission();
+              },
+              child: const Text('위치정보 접근 권한을 허용해주세요.'),
+            )
+          ],
+        ),
+      );
+    }
+
     if (currentLatLng == null) {
       setCurrentLatLng();
-      return const Center(child: CircularProgressIndicator());
+      return Wrapper(
+        widget: widget,
+        child: const CircularProgressIndicator(),
+      );
     }
 
     Future<Coord2Address> coord2Address(LatLng latLng) async {
@@ -156,6 +188,38 @@ class _KakaoMapContainerState extends State<KakaoMapContainer> {
       }
     }
 
+    return Wrapper(
+      widget: widget,
+      child: KakaoMap(
+        onMapCreated: ((controller) async {
+          mapController = controller;
+        }),
+        onMapTap: ((latLng) async {
+          tappedLocationMarker = null;
+          mapController.addMarker(markers: []);
+          await searchLocation(latLng);
+          if (tappedLocationMarker != null) {
+            mapController.addMarker(markers: [tappedLocationMarker!]);
+          }
+        }),
+        center: currentLatLng,
+      ),
+    );
+  }
+}
+
+class Wrapper extends StatelessWidget {
+  const Wrapper({
+    super.key,
+    required this.widget,
+    required this.child,
+  });
+
+  final KakaoMapContainer widget;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       height: widget.height,
       decoration: BoxDecoration(
@@ -171,22 +235,9 @@ class _KakaoMapContainerState extends State<KakaoMapContainer> {
         ],
       ),
       child: ClipRRect(
-        borderRadius: const BorderRadius.all(
-          Radius.circular(10),
-        ),
-        child: KakaoMap(
-          onMapCreated: ((controller) async {
-            mapController = controller;
-          }),
-          onMapTap: ((latLng) async {
-            tappedLocationMarker = null;
-            mapController.addMarker(markers: []);
-            await searchLocation(latLng);
-            if (tappedLocationMarker != null) {
-              mapController.addMarker(markers: [tappedLocationMarker!]);
-            }
-          }),
-          center: currentLatLng,
+        borderRadius: const BorderRadius.all(Radius.circular(10)),
+        child: Center(
+          child: child,
         ),
       ),
     );
