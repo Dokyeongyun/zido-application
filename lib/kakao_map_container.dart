@@ -1,13 +1,13 @@
 import 'dart:async';
-import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 import 'package:provider/provider.dart';
 import 'package:zido/place.dart';
 
-class KakaoMapContainer extends StatelessWidget {
+class KakaoMapContainer extends StatefulWidget {
   const KakaoMapContainer({
     super.key,
     this.height = 280,
@@ -16,9 +16,45 @@ class KakaoMapContainer extends StatelessWidget {
   final double height;
 
   @override
+  State<KakaoMapContainer> createState() => _KakaoMapContainerState();
+}
+
+class _KakaoMapContainerState extends State<KakaoMapContainer> {
+  Marker? tappedLocationMarker;
+  LatLng? currentLatLng;
+  late KakaoMapController mapController;
+
+  requestGeoPermission() async {
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error('permissions are denied');
+      }
+
+      await setCurrentLatLng();
+    }
+  }
+
+  setCurrentLatLng() async {
+    Position position = await Geolocator.getCurrentPosition();
+    setState(() {
+      currentLatLng = LatLng(position.latitude, position.longitude);
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    requestGeoPermission();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    late Marker? tappedLocationMarker;
-    late KakaoMapController mapController;
+    if (currentLatLng == null) {
+      setCurrentLatLng();
+      return const Center(child: CircularProgressIndicator());
+    }
 
     Future<Coord2Address> coord2Address(LatLng latLng) async {
       Coord2AddressRequest request = Coord2AddressRequest(
@@ -121,7 +157,7 @@ class KakaoMapContainer extends StatelessWidget {
     }
 
     return Container(
-      height: height,
+      height: widget.height,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         color: Colors.white,
@@ -150,7 +186,7 @@ class KakaoMapContainer extends StatelessWidget {
               mapController.addMarker(markers: [tappedLocationMarker!]);
             }
           }),
-          center: LatLng(37.48256861253413, 127.04079608010362),
+          center: currentLatLng,
         ),
       ),
     );
