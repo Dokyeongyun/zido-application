@@ -5,18 +5,20 @@ class SquareIconButton extends StatelessWidget {
     super.key,
     required this.icon,
     required this.onPressed,
+    this.size = 40,
     this.color = const Color(0xffA1CE5D),
   });
 
-  final Color color;
   final Icon icon;
   final VoidCallback? onPressed;
+  final double size;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 40,
-      height: 40,
+      width: size,
+      height: size,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         color: color,

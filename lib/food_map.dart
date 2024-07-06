@@ -317,8 +317,8 @@ class TopButtonBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 42,
-      margin: const EdgeInsets.fromLTRB(12, 28, 12, 12),
+      height: 45,
+      margin: const EdgeInsets.fromLTRB(12, 48, 12, 12),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -326,6 +326,7 @@ class TopButtonBar extends StatelessWidget {
             onPressed: () {
               Navigator.pop(context);
             },
+            size: 45,
             icon: const Icon(
               Icons.arrow_back_rounded,
               color: Colors.white,
@@ -362,6 +363,7 @@ class TopButtonBar extends StatelessWidget {
                         '서초구 양재동',
                         style: TextStyle(
                           color: Color.fromARGB(255, 105, 105, 105),
+                          fontSize: 16,
                         ),
                       ),
                     ],
@@ -372,6 +374,7 @@ class TopButtonBar extends StatelessWidget {
           ),
           const SquareIconButton(
             onPressed: null,
+            size: 45,
             icon: Icon(
               Icons.map_rounded,
               color: Colors.white,
